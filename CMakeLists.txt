@@ -21,6 +21,8 @@ qt_add_qml_module(apptwoGIS_testTask
         QML_FILES MyProgressBar.qml
         SOURCES WindowsHelper.h WindowsHelper.cpp
         QML_FILES MyButton.qml
+        SOURCES CorePresenter.h CorePresenter.cpp
+        SOURCES Core.h Core.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -44,12 +44,10 @@ Rectangle {
             innerText.color = innerRect.hoverColor
         }
         onPressed: {
-            console.warn("pressed")
             innerRect.color = Qt.darker( innerRect.hoverColor, 1.2 )
         }
 
         onReleased: {
-            console.warn("released")
             innerRect.color = incapsulatedObj.hovered ? innerRect.hoverColor : innerRect.baseColor
         }
     }
