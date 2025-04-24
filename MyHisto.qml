@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 pragma ComponentBehavior: Bound
 Item {
     property int totalWordCount: 100
-
+    required property var model
     id: innerItem
 
     QtObject {
@@ -17,48 +17,23 @@ Item {
         }
     }
 
-    Component {
-        id: histoDelegate
-        Rectangle {
-            property int index
-            property string hintText
-            property real heightRatio: 0
-            property bool hovered: false
-
-            QtObject {
-                id: histoIncapsulatedObj
-            }
-
-            id: histoElement
-            Layout.preferredHeight: parent.height * heightRatio
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                onEntered: histoElement.hovered = true
-                onExited: histoElement.hovered = false
-            }
-
-            ToolTip.visible: hovered
-            ToolTip.text: hintText
-        }
-    }
-
-
-
     RowLayout {
         anchors.fill: parent
         spacing: 2
         Repeater {
-            model: 15
-            delegate: histoDelegate
-            onItemAdded: (index, item) => {
-                item.color = incapsulatedObj.getRandomColor()
-                item.hintText = index
-                item.heightRatio = index / innerItem.totalWordCount
+            model: innerItem.model
+            delegate: MyHistoDelegate {
+
+                Component.onCompleted: {
+                    console.warn("[LOG] Data", key)
+                    console.warn("[LOG] Model", value)
+                }
             }
         }
     }
 }
+//onItemAdded: (index, item) => {
+//    item.color = incapsulatedObj.getRandomColor()
+//    item.hintText = index
+//    item.heightRatio = index / innerItem.totalWordCount
+//}

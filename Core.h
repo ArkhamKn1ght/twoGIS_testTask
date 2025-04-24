@@ -9,12 +9,8 @@ class Core : public QObject
 {
     Q_OBJECT
 public:
-    Core() {
-        qWarning() << "Core constructed";
-    }
-    ~Core() {
-        qWarning() << "Core destructed";
-    }
+    Core() {}
+    ~Core() {}
 public slots:
     int readFile(const QString& _path) {
         QFile file(_path); // Replace with your file path

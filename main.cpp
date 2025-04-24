@@ -10,6 +10,7 @@
 #include "WindowsHelper.h"
 #include "CorePresenter.h"
 void registerQmlTypes() {
+    //qmlRegisterType<MyMapModel>("com.twogis.test", 1, 0, "MyMapModel");
     qmlRegisterSingletonType<WindowsHelper>("com.twogis.test", 1, 0, "WindowsHelper",
     [](QQmlEngine *engine, QJSEngine *) -> QObject* {
         Q_UNUSED(engine)
@@ -45,6 +46,9 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+    CorePresenter corePresenter;
+    engine.rootContext()->setContextProperty("corePresenter", &corePresenter);
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
@@ -52,6 +56,6 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.loadFromModule("twoGIS_testTask", "Main");
-    CorePresenter myCore;
+
     return app.exec();
 }

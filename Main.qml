@@ -38,6 +38,13 @@ Window {
         Rectangle {
             anchors.fill: parent
             color: "black"
+            MyHisto {
+                anchors.fill: parent
+                model: corePresenter.mapModel
+                Component.onCompleted: {
+                    console.warn("aboba abobicus", corePresenter.mapModel)
+                }
+            }
         }
         footer: Rectangle {
             anchors.bottom: parent.bottom
