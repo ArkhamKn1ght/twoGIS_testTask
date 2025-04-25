@@ -40,18 +40,18 @@ int MyMapModel::lookup(const QString &key) const
     return m_data.value(key, -1); // Return -1 if not found
 }
 
-void MyMapModel::insert(const QString &key, int value)
+void MyMapModel::insert(const QString &key)
 {
-    qWarning() << "attempt to insert";
-    if (!m_data.contains(key)) {
+    auto it = m_data.find(key);
+    if(it != m_data.end()) {
+        it.value() = it.value() + 1;
+    } else {
         beginInsertRows(QModelIndex(), m_keys.size(), m_keys.size());
         m_keys.append(key);
+        m_data.insert(key, 1);
         endInsertRows();
         emit keysChanged();
-        qWarning() << "attempt to insert 1";
     }
-    m_data.insert(key, value);
-    qWarning() << "attempt to insert 2";
     emit dataChanged(index(0), index(m_keys.size() - 1));
 }
 

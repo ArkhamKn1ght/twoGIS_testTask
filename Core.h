@@ -12,18 +12,21 @@ public:
         OK = 0,
         FAILED_TO_OPEN_FILE
     };
+
+public:
     Core() {}
     ~Core() {}
 signals:
     void wordFound(QString _word);
-
+    void fileInfo(uint64_t _wordCount);
     void respone_readFile(ErrorCodes _code);
+
 public slots:
     void on_request_readFile(QString _path) {
-        emit respone_readFile( readFile(_path) );
+        emit respone_readFile( processFile(_path) );
     }
 private:
-    ErrorCodes readFile(const QString& _path);
+    ErrorCodes processFile(const QString& _path);
 };
 
 #endif // CORE_H

@@ -22,7 +22,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE int lookup(const QString &key) const;
-    Q_INVOKABLE void insert(const QString &key, int value);
+    Q_INVOKABLE void insert(const QString &key);
     Q_INVOKABLE void clear();
 
     QStringList keys() const;
