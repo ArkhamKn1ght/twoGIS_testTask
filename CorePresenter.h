@@ -7,6 +7,9 @@
 #include "Core.h"
 #include "MyMapModel.h"
 #include <QTimer>
+//implement some queue or list that holds  up to 15 iterators to items in map
+//in descending(or ascending) order
+
 class CorePresenter : public QObject
 {
 private:
@@ -20,33 +23,37 @@ private:
     Q_OBJECT
     Q_PROPERTY(MyMapModel* mapModel READ mapModel CONSTANT)
 public:
-    CorePresenter() {
-        m_CorePtr = std::unique_ptr<Core, CoreDeleter>(new Core());
-        m_CorePtr->moveToThread(&coreThread);
-        coreThread.start();
-        m_MapModel.insert("aboba", 5);
-        m_MapModel.insert("aboba1", 6);
-        m_MapModel.insert("aboba2", 7);
-        QTimer::singleShot(3000, [&]() {
-            m_MapModel.insert("ABOBA4", 10);
-        });
-    }
-    ~CorePresenter() {
-        if(coreThread.isRunning()) {
-            coreThread.quit();
-            coreThread.wait();
-        }
-    }
+    CorePresenter();
+    ~CorePresenter();
 
     MyMapModel* mapModel() { return &m_MapModel; }
 
-signals:
-    void nameChanged();
+    Q_INVOKABLE void readFile(const QString& _path) {
 
+        emit request_readFile(_path);
+    }
+signals:
+    void request_readFile(QString _path);
+private slots:
+    void on_response_readFile(Core::ErrorCodes _code) {
+        qWarning() << "response received!" << static_cast<int>(_code);
+    }
+    void on_wordFound_from_Core(QString _word) {
+        qWarning() << "Word found from core: " << _word;
+    }
 private:
-    MyMapModel m_MapModel;
-    std::unique_ptr<Core, CoreDeleter> m_CorePtr;
+    void initSignalSlotMechanism() {
+        QObject::connect(this, &CorePresenter::request_readFile, m_CorePtr.get(), &Core::on_request_readFile);
+        QObject::connect(m_CorePtr.get(), &Core::respone_readFile, this, &CorePresenter::on_response_readFile);
+        QObject::connect(m_CorePtr.get(), &Core::wordFound, this, &CorePresenter::on_wordFound_from_Core);
+    }
+
     QThread coreThread;
+
+    MyMapModel m_MapModel;
+
+    std::unique_ptr<Core, CoreDeleter> m_CorePtr;
+
 };
 
 #endif // COREPRESENTER_H

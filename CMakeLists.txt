@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(twoGIS_testTask VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(QT_QML_GENERATE_QMLLS_INI ON)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Widgets)
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -25,6 +25,7 @@ qt_add_qml_module(apptwoGIS_testTask
         SOURCES Core.h Core.cpp
         SOURCES MyMapModel.h MyMapModel.cpp
         QML_FILES MyHistoDelegate.qml
+        RESOURCES
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

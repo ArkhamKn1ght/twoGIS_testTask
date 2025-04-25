@@ -7,8 +7,11 @@ Rectangle {
     required property color baseColor
     required property color hoverColor
     required property string hintText
-    color: baseColor
+
     id: innerRect
+
+    color: baseColor
+
     QtObject {
         id: incapsulatedObj
         property bool hovered: false
@@ -21,12 +24,18 @@ Rectangle {
         id: innerText
 
         anchors.fill: parent
+
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
+
         wrapMode: Text.WordWrap
+
         text: innerRect.hintText
+
         font.pointSize: 16
         font.bold: true
+
+        color: innerRect.hoverColor
     }
 
     MouseArea {
@@ -49,6 +58,7 @@ Rectangle {
 
         onReleased: {
             innerRect.color = incapsulatedObj.hovered ? innerRect.hoverColor : innerRect.baseColor
+            innerRect.clicked()
         }
     }
 }
