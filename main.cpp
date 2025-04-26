@@ -11,6 +11,7 @@
 #include "WindowsHelper.h"
 #include "CorePresenter.h"
 void registerQmlTypes() {
+    qmlRegisterType<LimitRowsProxyModel>("com.twogis.test", 1, 0, "LimitRowsProxyModel");
     qmlRegisterSingletonType<WindowsHelper>("com.twogis.test", 1, 0, "WindowsHelper",
     [](QQmlEngine *engine, QJSEngine *) -> QObject* {
         Q_UNUSED(engine)

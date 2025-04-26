@@ -19,6 +19,7 @@ Core::ErrorCodes Core::processFile(const QString &_path) {
         file.reset();
     }
     {
+
         QTextStream in(&file);
         while (!in.atEnd()) {
             QString line = in.readLine();
@@ -26,6 +27,7 @@ Core::ErrorCodes Core::processFile(const QString &_path) {
 
             for (const QString& word : words)
                 emit wordFound(word);
+
         }
     }
 

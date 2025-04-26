@@ -17,7 +17,7 @@ public:
     Core() {}
     ~Core() {}
 signals:
-    void wordFound(QString _word);
+    void wordFound(QString _words);
     void fileInfo(uint64_t _wordCount);
     void respone_readFile(ErrorCodes _code);
 
