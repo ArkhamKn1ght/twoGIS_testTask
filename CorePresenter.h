@@ -29,10 +29,8 @@ public:
     CorePresenter();
     CorePresenter(const CorePresenter& _other) = delete;
     CorePresenter(CorePresenter&& _other) = delete;
-
     CorePresenter& operator=(const CorePresenter& _other) = delete;
     CorePresenter& operator=(CorePresenter&& _other) = delete;
-
     ~CorePresenter();
 
 

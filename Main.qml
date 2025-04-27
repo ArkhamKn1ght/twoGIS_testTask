@@ -52,6 +52,7 @@ Window {
 
                     onClicked: {
                         corePresenter.resetProcessing()
+                        mainWindow.wordCount = 0
                         mainWindow.filepath = ""
                     }
                 }
