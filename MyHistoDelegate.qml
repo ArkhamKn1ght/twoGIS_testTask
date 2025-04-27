@@ -17,6 +17,7 @@ Rectangle {
     }
 
     id: histoElement
+
     Layout.preferredHeight: parent.height * heightRatio
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom

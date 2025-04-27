@@ -6,7 +6,8 @@ Rectangle {
     signal clicked()
     required property color baseColor
     required property color hoverColor
-    required property string hintText
+    property string hintText: ""
+    required property string name
 
     id: innerRect
 
@@ -30,7 +31,7 @@ Rectangle {
 
         wrapMode: Text.WordWrap
 
-        text: innerRect.hintText
+        text: innerRect.name
 
         font.pointSize: 16
         font.bold: true
@@ -45,12 +46,17 @@ Rectangle {
             incapsulatedObj.hovered = true
             innerRect.color = innerRect.hoverColor
             innerText.color = innerRect.baseColor
+            if(innerRect.hintText.length > 0)
+                ToolTip.visible = true
         }
 
         onExited: {
             incapsulatedObj.hovered = false
             innerRect.color = innerRect.baseColor
             innerText.color = innerRect.hoverColor
+
+            if(innerRect.hintText.length > 0)
+                ToolTip.visible = false
         }
         onPressed: {
             innerRect.color = Qt.darker( innerRect.hoverColor, 1.2 )
@@ -60,5 +66,9 @@ Rectangle {
             innerRect.color = incapsulatedObj.hovered ? innerRect.hoverColor : innerRect.baseColor
             innerRect.clicked()
         }
+
+
+        ToolTip.text: innerRect.hintText
+
     }
 }

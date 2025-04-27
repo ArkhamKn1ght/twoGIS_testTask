@@ -4,10 +4,14 @@ import QtQuick.Layouts 1.15
 import com.twogis.test 1.0
 
 Window {
+    property string filepath: ""
+
+    id: mainWindow
+
     width: 640
     height: 480
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Coding Assignment")
     color: "black"
 
     Page {
@@ -29,10 +33,11 @@ Window {
 
                     baseColor: "#175E17"
                     hoverColor: "#A1E8A1"
-                    hintText: "Open File"
-
+                    name: "Open File"
+                    hintText: mainWindow.filepath
                     onClicked: {
-                        corePresenter.readFile(WindowsHelper.openFileDialog())
+                        corePresenter.mapModel.clear()
+                        mainWindow.filepath = WindowsHelper.openFileDialog()
                     }
                 }
                 MyButton {
@@ -43,10 +48,11 @@ Window {
 
                     baseColor: "#750000"
                     hoverColor: "#FF8A8A"
-                    hintText: "Stop processing"
+                    name: "Stop processing"
 
                     onClicked: {
-                        console.warn("aboba clicked 2")
+                        corePresenter.mapModel.clear()
+                        mainWindow.filepath = ""
                     }
                 }
             }
@@ -57,9 +63,6 @@ Window {
             MyHisto {
                 anchors.fill: parent
                 model: corePresenter.mapModel
-                Component.onCompleted: {
-                    console.warn("aboba abobicus", corePresenter.mapModel)
-                }
             }
         }
         footer: Rectangle {
@@ -80,10 +83,10 @@ Window {
 
                     baseColor: "#4681f4"
                     hoverColor: "#FFFFFF"
-                    hintText: "Start processing"
+                    name: "Start processing"
 
                     onClicked: {
-                        console.warn("aboba clicked 3")
+                        corePresenter.readFile(mainWindow.filepath)
                     }
                 }
                 MyButton {
@@ -94,9 +97,10 @@ Window {
 
                     baseColor: "#800020"
                     hoverColor: "#FF94AF"
-                    hintText: "Pause processing"
+                    name: "Pause processing"
 
                     onClicked: {
+                        corePresenter.pauseProcessing()
                         console.warn("aboba clicked 4")
                     }
                 }

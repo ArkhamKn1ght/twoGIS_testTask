@@ -30,9 +30,29 @@ public:
     MyMapModel* mapModel() { return &m_MapModel; }
 
     Q_INVOKABLE void readFile(const QString& _path) {
-
-        emit request_readFile(_path);
+        if(!m_IsJobPending) {
+            m_IsJobPending = true;
+            m_ProcessTimer.start(100);
+            emit request_readFile(_path);
+        }
     }
+
+    Q_INVOKABLE void resumeProcessing() {
+        qWarning() << "resuming 1";
+        if (!m_IsPaused) return;
+        qWarning() << "resuming 2";
+        m_ProcessTimer.start(100);
+        m_IsPaused = false;
+    }
+
+    Q_INVOKABLE void pauseProcessing() {
+        qWarning() << "pausing 1";
+        if (m_IsPaused) return;
+        qWarning() << "pausing 2";
+        m_ProcessTimer.stop();
+        m_IsPaused = true;
+    }
+
 signals:
     void request_readFile(QString _path);
 private slots:
@@ -42,31 +62,16 @@ private slots:
     void on_wordFound_from_Core(QString _word) {
         m_PendingWords.push(_word);
 
-        if( !m_IsJobPending ) {
-            m_IsJobPending = true;
-            m_ProcessTimer.start(100);
-        }
+
     }
 
-    void on_fileInfo_from_Core(uint64_t _wordCount) {
-    }
+    void on_fileInfo_from_Core(uint64_t _wordCount);
 
-    void on_processTimer_timeout() {
-        if( !m_IsJobPending ) return;
+    void on_processTimer_timeout();
 
-        int counter = 10000;
-        while(m_PendingWords.size() && counter) {
-            m_MapModel.insertNoUpdate(m_PendingWords.front());
-            m_PendingWords.pop();
-            --counter;
-        }
-        m_MapModel.forceUpdate();
-        if(m_PendingWords.size() == 0) {
-            m_ProcessTimer.stop();
-            m_IsJobPending = false;
-        }
-        qWarning() << "job done, " << m_PendingWords.size() << "words left to go";
-    }
+
+
+
 private:
     void initSignalSlotMechanism() {
         QObject::connect(this, &CorePresenter::request_readFile, m_CorePtr.get(), &Core::on_request_readFile);
@@ -85,8 +90,8 @@ private:
 
     std::queue<QString> m_PendingWords;
     bool m_IsJobPending = false;
+    bool m_IsPaused = false;
     QTimer m_ProcessTimer;
-
 };
 
 #endif // COREPRESENTER_H
