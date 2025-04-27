@@ -18,6 +18,7 @@ Core::ErrorCodes Core::processFile(const QString &_path) {
         emit fileInfo(wordCount);
         file.reset();
     }
+
     {
 
         QTextStream in(&file);

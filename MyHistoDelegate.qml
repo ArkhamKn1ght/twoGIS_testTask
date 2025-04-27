@@ -30,5 +30,5 @@ Rectangle {
     }
 
     ToolTip.visible: hovered
-    ToolTip.text: hintText
+    ToolTip.text: hintText + " " + value
 }

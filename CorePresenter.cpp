@@ -33,7 +33,6 @@ void CorePresenter::resumeProcessing() {
 }
 
 void CorePresenter::pauseProcessing() {
-    qWarning() << m_IsPaused << m_IsJobDone;
     if (m_IsPaused || m_IsJobDone) return;
 
     m_ProcessTimer.stop();
@@ -65,7 +64,7 @@ void CorePresenter::on_fileInfo_from_Core(uint64_t _wordCount) {
 void CorePresenter::on_processTimer_timeout() {
     if( !m_IsJobPending || m_IsPaused ) return;
 
-    static constexpr int processingStep = 1000;
+    static constexpr int processingStep = 10000;
     int counter = processingStep;
     while(m_PendingWords.size() && counter) {
         m_MapModel.insertNoUpdate(m_PendingWords.front());

@@ -6,9 +6,6 @@ Item {
     property color borderColor: "transparent"
 
     id: innerItem
-    onProgressChanged: {
-        console.warn("progress: ", progress, visible);
-    }
 
     visible: if (progress <= 0 || progress >= 1) {
                 false

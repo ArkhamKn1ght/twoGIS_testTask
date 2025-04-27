@@ -52,7 +52,6 @@ void MyMapModel::insert(const QString &key) {
         endInsertRows();
     }
 
-    // Sort descending by value
     std::sort(m_keys.begin(), m_keys.end(), [this](const QString &a, const QString &b) {
         return m_data[a] > m_data[b];
     });

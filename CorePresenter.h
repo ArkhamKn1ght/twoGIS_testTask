@@ -70,9 +70,6 @@ private slots:
     void on_fileInfo_from_Core(uint64_t _wordCount);
     void on_processTimer_timeout();
 
-
-
-
 private:
     void initSignalSlotMechanism();
 

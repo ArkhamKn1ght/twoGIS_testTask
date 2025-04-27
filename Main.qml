@@ -115,7 +115,6 @@ Window {
 
                     onClicked: {
                         corePresenter.pauseProcessing()
-                        console.warn("aboba clicked 4")
                     }
                 }
             }

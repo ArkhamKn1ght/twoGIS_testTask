@@ -5,7 +5,6 @@
 #include <QAbstractListModel>
 #include <QDebug>
 #include <QSortFilterProxyModel>
-
 class LimitRowsProxyModel : public QSortFilterProxyModel {
     Q_OBJECT
     Q_PROPERTY(int limit READ limit WRITE setLimit NOTIFY limitChanged)
@@ -50,7 +49,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE int lookup(const QString &key) const;
+    int lookup(const QString &key) const;
     void insert(const QString &key);
 
     void insertNoUpdate(const QString &key);
@@ -65,6 +64,8 @@ signals:
 
 private:
     QHash<QString, int> m_data;
+
+    // при очень сильном желании ускорить процесс, можно использовать priority_queue
     QStringList m_keys;
 };
 
