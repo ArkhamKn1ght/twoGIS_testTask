@@ -23,64 +23,58 @@ private:
 
     Q_OBJECT
     Q_PROPERTY(MyMapModel* mapModel READ mapModel CONSTANT)
+    Q_PROPERTY(quint64 progress READ progress NOTIFY progressChanged)
+    Q_PROPERTY(quint64 wordCount READ wordCount NOTIFY wordCountChanged)
 public:
     CorePresenter();
     ~CorePresenter();
 
+
+
+    Q_INVOKABLE void readFile(const QString& _path);
+    Q_INVOKABLE void resumeProcessing();
+    Q_INVOKABLE void pauseProcessing();
+    Q_INVOKABLE void resetProcessing();
+
+//property related methods
     MyMapModel* mapModel() { return &m_MapModel; }
 
-    Q_INVOKABLE void readFile(const QString& _path) {
-        if(!m_IsJobPending) {
-            m_IsJobPending = true;
-            m_ProcessTimer.start(100);
-            emit request_readFile(_path);
+    quint64 progress() const { return m_Progress; }
+    void setProgress(quint64 newValue) {
+        if (m_Progress != newValue) {
+            m_Progress = newValue;
+            emit progressChanged();
         }
     }
-
-    Q_INVOKABLE void resumeProcessing() {
-        qWarning() << "resuming 1";
-        if (!m_IsPaused) return;
-        qWarning() << "resuming 2";
-        m_ProcessTimer.start(100);
-        m_IsPaused = false;
+    void updateProgress(quint64 newVal) {
+        setProgress(m_Progress + newVal);
     }
 
-    Q_INVOKABLE void pauseProcessing() {
-        qWarning() << "pausing 1";
-        if (m_IsPaused) return;
-        qWarning() << "pausing 2";
-        m_ProcessTimer.stop();
-        m_IsPaused = true;
+    quint64 wordCount() const { return m_WordCount; }
+    void setWordCount(quint64 newValue) {
+        if (m_WordCount != newValue) {
+            m_WordCount = newValue;
+            emit wordCountChanged();
+        }
     }
-
 signals:
     void request_readFile(QString _path);
+//property related signals
+    void progressChanged();
+    void wordCountChanged();
 private slots:
-    void on_response_readFile(Core::ErrorCodes _code) {
-        qWarning() << "response received!" << static_cast<int>(_code);
-    }
+    void on_response_readFile(Core::ErrorCodes _code);
     void on_wordFound_from_Core(QString _word) {
         m_PendingWords.push(_word);
-
-
     }
-
     void on_fileInfo_from_Core(uint64_t _wordCount);
-
     void on_processTimer_timeout();
 
 
 
 
 private:
-    void initSignalSlotMechanism() {
-        QObject::connect(this, &CorePresenter::request_readFile, m_CorePtr.get(), &Core::on_request_readFile);
-        QObject::connect(m_CorePtr.get(), &Core::respone_readFile, this, &CorePresenter::on_response_readFile);
-        QObject::connect(m_CorePtr.get(), &Core::wordFound, this, &CorePresenter::on_wordFound_from_Core);
-        QObject::connect(m_CorePtr.get(), &Core::fileInfo, this, &CorePresenter::on_fileInfo_from_Core);
-
-        QObject::connect(&m_ProcessTimer, &QTimer::timeout, this, &CorePresenter::on_processTimer_timeout);
-    }
+    void initSignalSlotMechanism();
 
     QThread coreThread;
 
@@ -89,9 +83,16 @@ private:
     std::unique_ptr<Core, CoreDeleter> m_CorePtr;
 
     std::queue<QString> m_PendingWords;
+
     bool m_IsJobPending = false;
     bool m_IsPaused = false;
+    bool m_IsJobDone = false;
+
     QTimer m_ProcessTimer;
+
+    //properties
+    quint64 m_Progress  = 0;
+    quint64 m_WordCount = 0;
 };
 
 #endif // COREPRESENTER_H

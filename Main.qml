@@ -5,9 +5,9 @@ import com.twogis.test 1.0
 
 Window {
     property string filepath: ""
-
+    property int wordCount: corePresenter.wordCount
+    property int progress: corePresenter.progress
     id: mainWindow
-
     width: 640
     height: 480
     visible: true
@@ -36,7 +36,7 @@ Window {
                     name: "Open File"
                     hintText: mainWindow.filepath
                     onClicked: {
-                        corePresenter.mapModel.clear()
+                        corePresenter.resetProcessing()
                         mainWindow.filepath = WindowsHelper.openFileDialog()
                     }
                 }
@@ -51,7 +51,7 @@ Window {
                     name: "Stop processing"
 
                     onClicked: {
-                        corePresenter.mapModel.clear()
+                        corePresenter.resetProcessing()
                         mainWindow.filepath = ""
                     }
                 }
@@ -60,9 +60,23 @@ Window {
         Rectangle {
             anchors.fill: parent
             color: "black"
+
             MyHisto {
                 anchors.fill: parent
                 model: corePresenter.mapModel
+            }
+
+            MyProgressBar {
+                id: progressBar
+                anchors.centerIn: parent
+                progress: if(mainWindow.wordCount == 0)
+                              0
+                            else
+                              mainWindow.progress / mainWindow.wordCount
+                width: 150
+                height: 40
+                progressColor: "red"
+                borderColor: "green"
             }
         }
         footer: Rectangle {
@@ -108,20 +122,5 @@ Window {
         }
     }
 
-    MyProgressBar {
-        id: progressBar
-        anchors.centerIn: parent
-        width: 100
-        height: 50
-        progressColor: "red"
-        borderColor: "green"
-        NumberAnimation {
-            target: progressBar
-            property: "progress"
-            from: 0
-            to: 1
-            duration: 2000 // 2 seconds
-            running: true
-        }
-    }
+
 }

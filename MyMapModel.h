@@ -51,48 +51,12 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE int lookup(const QString &key) const;
-    void insert(const QString &key) {
-        bool existed = m_data.contains(key);
+    void insert(const QString &key);
 
-        if (existed) {
-            m_data[key] += 1;
-        } else {
-            beginInsertRows(QModelIndex(), m_keys.size(), m_keys.size());
-            m_keys.append(key);
-            m_data.insert(key, 1);
-            endInsertRows();
-        }
+    void insertNoUpdate(const QString &key);
+    void clear();
 
-        // Sort descending by value
-        std::sort(m_keys.begin(), m_keys.end(), [this](const QString &a, const QString &b) {
-            return m_data[a] > m_data[b];
-        });
-    }
-
-    void insertNoUpdate(const QString &key) {
-        bool existed = m_data.contains(key);
-
-        if (existed) {
-            m_data[key] += 1;
-        } else {
-            beginInsertRows(QModelIndex(), m_keys.size(), m_keys.size());
-            m_keys.append(key);
-            m_data.insert(key, 1);
-            endInsertRows();
-        }
-    }
-    Q_INVOKABLE void clear();
-
-    void forceUpdate() {
-
-        std::sort(m_keys.begin(), m_keys.end(), [this](const QString &a, const QString &b) {
-            return m_data[a] > m_data[b];
-        });
-
-        beginResetModel();
-        endResetModel();
-        emit keysChanged();
-    }
+    void forceUpdate();
 
     QStringList keys() const;
 
