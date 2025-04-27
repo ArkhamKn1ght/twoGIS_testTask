@@ -15,6 +15,10 @@ public:
 
 public:
     Core() {}
+    Core(const Core& _other) = delete;
+    Core(Core&& _other) = delete;
+    Core& operator=(const Core& _other) = delete;
+    Core& operator=(Core&& _other) = delete;
     ~Core() {}
 signals:
     void wordFound(QString _words);
